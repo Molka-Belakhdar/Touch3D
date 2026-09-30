@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TOUCH 3D — Donnez vie à vos idées</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#2143EC;--ice:#A1E0F1;--grey:#7E8589;--sand:#D8CFC1;--sage:#ACCCB3;--bg:#08090d;--panel:#11131a}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--sand);font-family:Manrope,sans-serif;line-height:1.6;overflow-x:hidden}
+h1,h2,h3{font-family:Unbounded,sans-serif;font-weight:800;line-height:1.02;letter-spacing:-.02em;color:#f3eee6}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--ice);outline-offset:3px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+section{padding:130px 0;position:relative}
+nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:18px 32px;backdrop-filter:blur(14px);background:linear-gradient(#08090dcc,transparent)}
+.logo{font-family:Unbounded;font-weight:800;font-size:20px;color:#f3eee6}.logo b{color:var(--ice)}
+nav div a{margin-left:26px;font-size:14px;color:var(--sand);opacity:.8;transition:.3s}nav div a:hover{opacity:1;color:var(--ice)}
+.btn{display:inline-block;padding:16px 30px;border-radius:99px;font-weight:700;font-size:15px;border:0;cursor:pointer;transition:transform .3s,box-shadow .3s;font-family:inherit}
+.btn.p{background:var(--blue);color:#fff;box-shadow:0 0 0 0 #2143ec00,0 10px 40px -10px var(--blue)}
+.btn.p:hover{transform:translateY(-4px);box-shadow:0 0 0 6px #2143ec33,0 20px 50px -10px var(--blue)}
+.btn.g{border:1px solid #d8cfc155;color:var(--sand);background:#ffffff08}
+.btn.g:hover{border-color:var(--ice);color:var(--ice);transform:translateY(-4px)}
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;overflow:hidden;padding:120px 0 60px}
+#hero:before{content:"";position:absolute;width:900px;height:900px;left:50%;top:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,#2143ec55,#a1e0f114 45%,transparent 70%);filter:blur(30px)}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-txt{position:relative;z-index:2;text-align:center;pointer-events:none}
+.hero-txt .btn{pointer-events:auto}
+.hero-txt h1{font-size:clamp(40px,8.4vw,128px);text-shadow:0 10px 60px #000}
+.hero-txt h1 span{display:block;-webkit-text-stroke:2px var(--ice);color:transparent}
+.hero-txt p{max-width:520px;margin:28px auto 36px;font-size:18px;color:var(--sand)}
+.hero-txt .btn{margin:6px}
+.load{animation:rise 1.2s cubic-bezier(.2,.8,.2,1) both}
+.hero-txt p.load{animation-delay:.25s}.hero-txt div.load{animation-delay:.45s}
+@keyframes rise{from{opacity:0;transform:translateY(50px);filter:blur(12px)}}
+.scroll{position:absolute;bottom:26px;left:50%;width:1px;height:60px;background:linear-gradient(var(--ice),transparent);animation:sc 2s infinite}
+@keyframes sc{50%{transform:scaleY(.4);transform-origin:top}}
+/* SERVICES */
+.head{max-width:760px;margin-bottom:64px}.head h2{font-size:clamp(32px,5vw,64px)}.head p{margin-top:18px;color:var(--grey);font-size:18px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;perspective:1200px}
+.card{position:relative;height:460px;border-radius:28px;background:linear-gradient(160deg,#171a25,#0d0f15);border:1px solid #ffffff12;padding:32px;overflow:hidden;transition:transform .25s ease-out,border-color .4s;transform-style:preserve-3d}
+.card:hover{border-color:var(--ice)}
+.card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,30%),var(--c),transparent 55%);opacity:.28;transition:.4s}
+.card:hover:before{opacity:.6}
+.card h3{font-size:26px;position:relative}
+.scene{position:absolute;left:50%;top:48%;width:120px;height:120px;margin:-60px;perspective:600px;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.card:hover .scene{transform:translateY(-70px) scale(1.15)}
+.cube{width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:spin 14s linear infinite;animation-play-state:paused}
+.card:hover .cube{animation-play-state:running;animation-duration:5s}
+.cube i{position:absolute;inset:0;border:1px solid #ffffff55;background:linear-gradient(135deg,var(--c),#ffffff10);box-shadow:inset 0 0 30px #ffffff33}
+.cube i:nth-child(1){transform:translateZ(60px)}.cube i:nth-child(2){transform:rotateY(180deg) translateZ(60px)}
+.cube i:nth-child(3){transform:rotateY(90deg) translateZ(60px)}.cube i:nth-child(4){transform:rotateY(-90deg) translateZ(60px)}
+.cube i:nth-child(5){transform:rotateX(90deg) translateZ(60px)}.cube i:nth-child(6){transform:rotateX(-90deg) translateZ(60px)}
+.cube.r i{border-radius:50%}.cube.t i{clip-path:polygon(50% 0,100% 100%,0 100%)}
+@keyframes spin{to{transform:rotateX(360deg) rotateY(720deg)}}
+.shadow{position:absolute;left:50%;top:48%;width:120px;height:20px;margin:110px -60px;background:radial-gradient(#000,transparent 70%);transition:.7s}
+.card:hover .shadow{transform:translateY(20px) scale(.7);opacity:.6}
+.info{position:absolute;left:32px;right:32px;bottom:32px;color:var(--sand)}
+.info small{display:block;color:var(--grey);font-size:15px;transition:.4s}
+.info ul{list-style:none;max-height:0;opacity:0;overflow:hidden;transition:.5s;font-size:14px}
+.info li{padding:3px 0}.info li:before{content:"+ ";color:var(--ice)}
+.card:hover .info ul,.card:focus-within .info ul{max-height:120px;opacity:1;margin-top:8px}
+/* PROCESS */
+#process{background:linear-gradient(#08090d,#0d1020 50%,#08090d)}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;position:relative}
+.steps:before{content:"";position:absolute;left:5%;right:5%;top:52px;height:2px;background:linear-gradient(90deg,var(--blue),var(--ice),var(--sage));transform:scaleX(0);transform-origin:left;transition:transform 2s ease-out}
+.steps.in:before{transform:scaleX(1)}
+.step{text-align:center;opacity:0;transform:translateY(30px);transition:.8s}
+.steps.in .step{opacity:1;transform:none}
+.steps.in .step:nth-child(2){transition-delay:.3s}.steps.in .step:nth-child(3){transition-delay:.6s}.steps.in .step:nth-child(4){transition-delay:.9s}.steps.in .step:nth-child(5){transition-delay:1.2s}
+.orb{width:104px;height:104px;margin:0 auto 22px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#fff8,var(--c) 40%,#000 120%);box-shadow:0 20px 50px -12px var(--c);display:grid;place-items:center;font-family:Unbounded;font-weight:800;font-size:28px;color:#fff;animation:float 5s ease-in-out infinite}
+.step:nth-child(2) .orb{animation-delay:-1s}.step:nth-child(3) .orb{animation-delay:-2s}.step:nth-child(4) .orb{animation-delay:-3s}.step:nth-child(5) .orb{animation-delay:-4s}
+@keyframes float{50%{transform:translateY(-14px)}}
+.step h3{font-size:18px;margin-bottom:8px}.step p{font-size:14px;color:var(--grey)}
+/* GALLERY */
+.gal{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:150px;gap:20px}
+.g{position:relative;border-radius:24px;overflow:hidden;background:#12141c;border:1px solid #ffffff10;cursor:zoom-in;transition:transform .5s cubic-bezier(.2,.8,.2,1),z-index 0s .5s}
+.g:nth-child(1){grid-column:span 5;grid-row:span 3}.g:nth-child(2){grid-column:span 4;grid-row:span 2}.g:nth-child(3){grid-column:span 3;grid-row:span 2}
+.g:nth-child(4){grid-column:span 3;grid-row:span 2}.g:nth-child(5){grid-column:span 4;grid-row:span 3}.g:nth-child(6){grid-column:span 5;grid-row:span 2}
+.g:nth-child(7){grid-column:span 3;grid-row:span 1}
+.g:hover{transform:scale(1.04);z-index:3;transition-delay:0s;border-color:var(--ice)}
+.g:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,var(--c),transparent 65%);opacity:.35}
+.obj{position:absolute;left:50%;top:44%;width:44%;aspect-ratio:1;translate:-50% -50%;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.g:hover .obj{transform:rotate(18deg) scale(1.2) rotateY(180deg)}
+.o1{border-radius:50%;background:radial-gradient(circle at 30% 25%,#fff,var(--c) 45%,#000 130%)}
+.o2{border-radius:20%;background:linear-gradient(135deg,#fff6,var(--c) 40%,#000);transform:rotate(12deg);box-shadow:0 30px 60px -20px var(--c)}
+.o3{clip-path:polygon(50% 0,100% 100%,0 100%);background:linear-gradient(120deg,#fff9,var(--c) 45%,#000)}
+.o4{border-radius:50%;background:transparent;border:clamp(14px,3vw,34px) solid var(--c);box-shadow:inset 0 0 30px #fff5,0 0 40px -6px var(--c)}
+.o5{clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);background:linear-gradient(140deg,#fff9,var(--c) 45%,#000)}
+.tag{position:absolute;left:18px;right:18px;bottom:14px;display:flex;justify-content:space-between;align-items:end;font-size:13px}
+.tag b{font-family:Unbounded;font-size:15px;color:#f3eee6}
+.tag span{color:var(--grey);opacity:0;transform:translateY(10px);transition:.4s;text-align:right}
+.g:hover .tag span{opacity:1;transform:none}
+/* CONFIGURATOR */
+#create{background:radial-gradient(ellipse at 70% 50%,#2143ec2e,transparent 60%)}
+.conf{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
+#confCanvas{width:100%;height:520px;border-radius:32px;background:radial-gradient(circle at 50% 40%,#1a1f36,#0a0b10);border:1px solid #ffffff14;cursor:grab;touch-action:pan-y}
+.opts h3{font-size:14px;color:var(--grey);font-family:Manrope;letter-spacing:0;margin:26px 0 12px}
+.opts h3:first-of-type{margin-top:0}
+.sw{display:flex;gap:12px;flex-wrap:wrap}
+.sw button{width:46px;height:46px;border-radius:50%;border:2px solid transparent;cursor:pointer;background:var(--c);transition:.3s;box-shadow:0 8px 20px -6px var(--c)}
+.sw button.on,.sw button:hover{border-color:#fff;transform:scale(1.14)}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{padding:11px 20px;border-radius:99px;border:1px solid #ffffff22;background:none;color:var(--sand);cursor:pointer;font:600 14px Manrope;transition:.3s}
+.seg button.on{background:var(--ice);color:#08090d;border-color:var(--ice)}
+input[type=range]{width:100%;accent-color:var(--ice)}
+.sum{margin:26px 0;padding:16px 20px;border-radius:18px;background:#ffffff08;border:1px solid #ffffff12;font-size:14px}
+/* CTA */
+#cta{text-align:center;padding:170px 0;overflow:hidden}
+#cta:before{content:"";position:absolute;left:50%;top:50%;width:1000px;height:600px;transform:translate(-50%,-50%);background:radial-gradient(ellipse,#2143ecaa,#a1e0f122 50%,transparent 70%);filter:blur(40px);animation:pulse 6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.5;transform:translate(-50%,-50%) scale(1.15)}}
+#cta h2{font-size:clamp(38px,7vw,104px);position:relative;margin-bottom:44px}
+#cta .btn{position:relative;font-size:17px;padding:22px 44px}
+footer{border-top:1px solid #ffffff12;padding:36px 0}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;font-size:14px;color:var(--grey)}
+footer nav{all:unset}
+.soc a{margin-left:22px;transition:.3s}.soc a:hover{color:var(--ice)}
+.lb{position:fixed;inset:0;z-index:50;background:#000d;backdrop-filter:blur(10px);display:none;place-items:center}
+.lb.on{display:grid}.lb div{width:min(420px,80vw);text-align:center}
+.lb .big{aspect-ratio:1;margin-bottom:20px;position:relative}
+.lb .big .obj{width:80%;animation:spin2 8s linear infinite}
+@keyframes spin2{to{transform:rotateY(360deg)}}
+.rv{opacity:0;transform:translateY(40px);transition:1s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
+@media(max-width:900px){
+ section{padding:80px 0}
+ .cards{grid-template-columns:1fr}.card{height:400px}
+ .steps{grid-template-columns:1fr;gap:34px}.steps:before{display:none}
+ .gal{grid-template-columns:repeat(2,1fr);grid-auto-rows:170px}.g:nth-child(n){grid-column:span 1;grid-row:span 1}.g:nth-child(1),.g:nth-child(5){grid-row:span 2}
+ .conf{grid-template-columns:1fr}#confCanvas{height:380px}
+ footer .wrap{justify-content:center;text-align:center}
+}
+
+@property --a{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes rot{to{--a:360deg}}@keyframes sh{to{background-position:200%}}
+@keyframes aur{to{transform:translate(6%,4%) rotate(8deg) scale(1.1)}}@keyframes mq{to{transform:translateX(-50%)}}
+body:before{content:"";position:fixed;inset:-20%;z-index:-1;background:radial-gradient(40% 40% at 20% 20%,#2143ec44,transparent),radial-gradient(35% 35% at 80% 70%,#a1e0f133,transparent),radial-gradient(30% 30% at 60% 10%,#accdb322,transparent);animation:aur 18s ease-in-out infinite alternate}
+#glow{position:fixed;width:460px;height:460px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(#a1e0f120,transparent 65%);translate:-50% -50%;mix-blend-mode:screen}
+#bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:30;background:linear-gradient(90deg,var(--blue),var(--ice))}
+.btn.p{background:linear-gradient(110deg,var(--blue),#6a4dff,var(--ice),var(--blue));background-size:200%;animation:sh 5s linear infinite}
+.hero-txt h1 span{background:linear-gradient(90deg,var(--ice),#fff,var(--blue),var(--ice));background-size:200%;-webkit-background-clip:text;background-clip:text;-webkit-text-stroke:0;color:transparent;animation:rise 1.2s both,sh 6s linear infinite}
+.links{display:flex;align-items:center}.cartbtn{margin-left:26px;padding:10px 20px;font-size:14px}.cartbtn b{background:#fff;color:var(--blue);border-radius:99px;padding:1px 8px;margin-left:6px}
+.burger{display:none;background:none;border:0;color:#fff;font-size:28px;cursor:pointer}
+.mq{overflow:hidden;background:linear-gradient(90deg,var(--blue),#5a3df0,var(--blue));padding:16px 0;transform:rotate(-1.2deg);margin:-10px -20px 0;position:relative;z-index:3}
+.mq div{display:flex;gap:48px;width:max-content;animation:mq 28s linear infinite;font:800 22px Unbounded;color:#fff;white-space:nowrap}
+.card:after,.pc:after{content:"";position:absolute;inset:0;border-radius:28px;padding:1.5px;background:conic-gradient(from var(--a),transparent 70%,var(--ice),transparent);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:rot 5s linear infinite;pointer-events:none}
+.shop{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.pc{position:relative;border-radius:28px;background:linear-gradient(160deg,#171a25,#0d0f15);border:1px solid #ffffff12;padding:22px;overflow:hidden}
+.pc.in{transition:transform .25s ease-out,border-color .4s,opacity 1s}.pc:hover{border-color:var(--ice)}
+.pv{height:200px;position:relative;background:radial-gradient(circle at 50% 45%,var(--c),transparent 68%);opacity:.95;margin-bottom:16px}
+.pc:hover .obj{transform:rotate(18deg) scale(1.2) rotateY(180deg)}
+.pc h3{font-size:18px}.pc p{color:var(--grey);font-size:14px;margin:6px 0 16px}.pc .row{display:flex;justify-content:space-between;align-items:center}
+.pr{font:800 22px Unbounded;color:var(--ice)}.add{padding:12px 22px;font-size:14px}
+.bd{position:absolute;top:18px;left:18px;z-index:2;background:var(--sage);color:#08090d;font-size:12px;font-weight:700;padding:4px 12px;border-radius:99px}
+.trust{display:flex;gap:28px;flex-wrap:wrap;margin-top:22px;font-size:15px;color:var(--sand)}.trust span:before{content:"✓ ";color:var(--sage)}
+.dr{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:60;background:#0d0f16;border-left:1px solid #ffffff18;transform:translateX(100%);transition:.5s cubic-bezier(.2,.8,.2,1);padding:28px;display:flex;flex-direction:column}
+.dr.on{transform:none}
+.ci{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #ffffff12;font-size:15px}
+.qt{white-space:nowrap}.qt button{width:30px;height:30px;border-radius:50%;border:1px solid #ffffff33;background:none;color:var(--sand);cursor:pointer;font-size:16px}
+.x{background:none;border:0;color:var(--sand);font-size:22px;cursor:pointer}
+.ov{position:fixed;inset:0;z-index:70;background:#000c;backdrop-filter:blur(10px);display:none;place-items:center}.ov.on{display:grid}
+.box{position:relative;background:#0d0f16;border:1px solid #ffffff18;border-radius:24px;padding:28px;width:min(480px,92vw);max-height:92vh;overflow:auto}
+.f input,.f textarea,.f select{width:100%;padding:14px 16px;border-radius:14px;border:1px solid #ffffff22;background:#ffffff0a;color:#f3eee6;font:inherit;margin-bottom:12px}
+.f select option{background:#11131a}.f div{display:flex;gap:10px}
+#contact .conf p{margin-bottom:6px}
+@media(hover:none){#glow{display:none}}
+@media(max-width:900px){.shop{grid-template-columns:1fr}.burger{display:block}
+nav .links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:flex-start;gap:16px;background:#08090df5;padding:22px 32px}
+nav .links.open{display:flex}nav .links a,.cartbtn{margin:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div><div id="glow"></div><nav><a class="logo" href="#hero">TOUCH<b>3D</b></a><div class="links" id="links"><a href="#services">Services</a><a href="#galerie">Découvrir nos créations</a><a href="#commander">Commander</a><a href="#contact">Contact</a><button class="btn p cartbtn" id="cartBtn">Panier <b id="cc">0</b></button></div><button class="burger" id="burger" aria-label="Menu">☰</button></nav>
+
+<section id="hero"><canvas id="heroCanvas"></canvas>
+<div class="wrap hero-txt"><h1 class="load">DONNEZ VIE<span>À VOS IDÉES.</span></h1>
+<p class="load">Impression 3D, miniatures et créations personnalisées. De l’idée à l’objet.</p>
+<div class="load"><a class="btn p" href="#create">Créer mon projet</a><a class="btn g" href="#galerie">Découvrir nos créations</a></div></div>
+<div class="scroll"></div></section>
+<div class="mq"><div id="mq">Impression 3D ✦ Miniatures ✦ Objets sur mesure ✦ Fait main à Paris ✦ </div></div>
+
+<section id="services"><div class="wrap">
+<div class="head rv"><h2>Trois façons de faire exister un objet.</h2><p>Survolez une carte : le modèle prend vie.</p></div>
+<div class="cards">
+<article class="card rv" tabindex="0" style="--c:#2143EC"><h3>Impression 3D</h3><div class="scene"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="shadow"></div>
+<div class="info"><small>Pièces fonctionnelles et prototypes.</small><ul><li>PLA, PETG, résine</li><li>Précision jusqu’à 0,05 mm</li><li>Petites séries possibles</li></ul></div></article>
+<article class="card rv" tabindex="0" style="--c:#A1E0F1"><h3>Miniatures</h3><div class="scene"><div class="cube t"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="shadow"></div>
+<div class="info"><small>Figurines, décors et personnages détaillés.</small><ul><li>Jeux de plateau et jeux de rôle</li><li>Impression résine haute définition</li><li>Peinture sur demande</li></ul></div></article>
+<article class="card rv" tabindex="0" style="--c:#ACCCB3"><h3>Personnalisation</h3><div class="scene"><div class="cube r"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="shadow"></div>
+<div class="info"><small>Votre idée, votre nom, votre style.</small><ul><li>Modélisation depuis un croquis</li><li>Cadeaux et objets uniques</li><li>Couleur, taille et finition au choix</li></ul></div></article>
+</div></div></section>
+
+<section id="process"><div class="wrap">
+<div class="head rv"><h2>De l’idée à l’objet, en cinq étapes.</h2></div>
+<div class="steps" id="steps">
+<div class="step" style="--c:#2143EC"><div class="orb">1</div><h3>Idée</h3><p>Vous décrivez votre projet, un croquis suffit.</p></div>
+<div class="step" style="--c:#A1E0F1"><div class="orb">2</div><h3>Modélisation</h3><p>Nous dessinons le modèle 3D et vous le validez.</p></div>
+<div class="step" style="--c:#7E8589"><div class="orb">3</div><h3>Impression</h3><p>La pièce se construit couche après couche.</p></div>
+<div class="step" style="--c:#D8CFC1"><div class="orb">4</div><h3>Finition</h3><p>Ponçage, apprêt et peinture à la main.</p></div>
+<div class="step" style="--c:#ACCCB3"><div class="orb">5</div><h3>Objet</h3><p>Votre création est prête, emballée et livrée.</p></div>
+</div></div></section>
+
+<section id="galerie"><div class="wrap">
+<div class="head rv"><h2>Nos créations.</h2><p>Cliquez sur une pièce pour la voir de plus près. Remplacez ces formes par vos photos.</p></div>
+<div class="gal">
+<div class="g" style="--c:#2143EC" data-t="Guerrier arcane" data-d="Miniature résine, 32 mm"><div class="obj o1"></div><div class="tag"><b>Guerrier arcane</b><span>Miniature<br>résine 32 mm</span></div></div>
+<div class="g" style="--c:#ACCCB3" data-t="Vase Orbite" data-d="Objet décoratif, PLA soie"><div class="obj o2"></div><div class="tag"><b>Vase Orbite</b><span>Décoration<br>PLA soie</span></div></div>
+<div class="g" style="--c:#A1E0F1" data-t="Cristal" data-d="Pièce de collection"><div class="obj o3"></div><div class="tag"><b>Cristal</b><span>Collection</span></div></div>
+<div class="g" style="--c:#D8CFC1" data-t="Bague Anneau" data-d="Création personnalisée"><div class="obj o4"></div><div class="tag"><b>Anneau</b><span>Sur mesure</span></div></div>
+<div class="g" style="--c:#2143EC" data-t="Golem de poche" data-d="Figurine peinte à la main"><div class="obj o5"></div><div class="tag"><b>Golem</b><span>Figurine<br>peinte main</span></div></div>
+<div class="g" style="--c:#7E8589" data-t="Boule Nébuleuse" data-d="Lampe personnalisée"><div class="obj o1"></div><div class="tag"><b>Nébuleuse</b><span>Lampe<br>personnalisée</span></div></div>
+<div class="g" style="--c:#A1E0F1" data-t="Prisme" data-d="Prototype fonctionnel"><div class="obj o3"></div><div class="tag"><b>Prisme</b><span>Prototype</span></div></div>
+</div></div></section>
+
+<section id="commander"><div class="wrap">
+<div class="head rv"><h2>Choisis ta pièce. On s’occupe du reste.</h2><p>Fabrication sous 3 à 5 jours, emballage soigné.</p><div class="trust"><span>Livraison offerte dès 60 €</span><span>Paiement sécurisé</span><span>Satisfait ou refait</span></div></div>
+<div class="shop" id="shop"></div></div></section>
+
+<section id="create"><div class="wrap">
+<div class="head rv"><h2>ET VOUS, QU’ALLEZ-VOUS CRÉER ?</h2></div>
+<div class="conf"><canvas id="confCanvas"></canvas>
+<div class="opts">
+<h3>Couleur</h3><div class="sw" id="sw"><button class="on" style="--c:#2143EC" data-c="#2143EC" aria-label="Bleu électrique"></button><button style="--c:#A1E0F1" data-c="#A1E0F1" aria-label="Bleu glace"></button><button style="--c:#ACCCB3" data-c="#ACCCB3" aria-label="Vert sauge"></button><button style="--c:#D8CFC1" data-c="#D8CFC1" aria-label="Sable"></button><button style="--c:#7E8589" data-c="#7E8589" aria-label="Gris"></button></div>
+<h3>Taille : <span id="sz">10 cm</span></h3><input type="range" id="size" min="5" max="30" value="10" aria-label="Taille">
+<h3>Finition</h3><div class="seg" id="fin"><button class="on" data-m=".85" data-r=".05">Mate</button><button data-m=".2" data-r=".25">Brillante</button><button data-m="1" data-r=".3">Métal</button></div>
+<div class="sum" id="sum"></div>
+<a class="btn p" href="#contact">Lancer ce projet</a>
+</div></div></div></section>
+
+<section id="cta"><div class="wrap"><h2 class="rv">VOTRE IDÉE<br>MÉRITE D’EXISTER.</h2><a class="btn p rv" href="#contact">LANCER MON PROJET →</a></div></section>
+
+<section id="contact"><div class="wrap"><div class="conf"><div class="rv"><h2 style="font-size:clamp(32px,5vw,64px)">Parlons de ton projet.</h2><p style="margin:18px 0 28px;font-size:18px;color:var(--grey)">Devis gratuit, réponse sous 24 h.</p><p><b>contact@touch3d.fr</b></p><p>+33 6 00 00 00 00</p><p>Atelier TOUCH 3D, Paris</p></div>
+<form class="f rv" id="mf"><input required placeholder="Ton nom" id="mn"><input required type="email" placeholder="Ton email" id="me"><select id="ms"><option>Impression 3D</option><option>Miniatures</option><option>Personnalisation</option><option>Autre</option></select><textarea required rows="5" placeholder="Décris ton idée" id="mm"></textarea><button class="btn p" style="width:100%">Envoyer ma demande</button></form></div></div></section>
+
+<footer><div class="wrap"><span class="logo">TOUCH<b>3D</b></span><span>© 2026 TOUCH 3D</span><div class="soc"><a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Facebook</a></div></div></footer>
+
+<aside class="dr" id="dr"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:22px">Ton panier</h3><button class="x" id="closeCart" aria-label="Fermer">✕</button></div><div id="ci" style="flex:1;overflow:auto;margin:16px 0"></div><div id="ct" class="sum"></div><button class="btn p" id="pay" disabled>Passer au paiement</button></aside>
+<div class="ov" id="co"><form class="box" id="cf"><button type="button" class="x" id="closeCo" style="position:absolute;top:18px;right:20px" aria-label="Fermer">✕</button><h3 style="font-size:24px;margin-bottom:6px">Paiement</h3><p id="cs" style="color:var(--grey);font-size:14px;margin-bottom:18px"></p>
+<div class="f"><input required placeholder="Nom complet"><input required type="email" placeholder="Email"><input required placeholder="Adresse de livraison"><input required placeholder="Code postal et ville"></div>
+<div class="seg" id="pm" style="margin-bottom:14px"><button type="button" class="on">Carte bancaire</button><button type="button">PayPal</button><button type="button">Apple Pay</button></div>
+<div class="f" id="cardf"><input placeholder="Numéro de carte" inputmode="numeric" maxlength="19"><div><input placeholder="MM/AA"><input placeholder="CVC"></div></div>
+<button class="btn p" id="go" style="width:100%">Payer</button><p style="font-size:12px;color:var(--grey);margin-top:12px">Version démo : aucun paiement réel n’est effectué.</p></form></div>
+<div class="lb" id="lb"><div><div class="big" id="lbBig"></div><h2 id="lbT" style="font-size:28px"></h2><p id="lbD"></p><p id="lbP" style="color:var(--ice);font:800 22px Unbounded;margin:10px 0"></p><button class="btn p" id="lbAdd">Ajouter au panier</button></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+// Reveal on scroll
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.2});
+$$('.rv,#steps').forEach(el=>io.observe(el));
+// Card tilt + light
+$$('.card').forEach(c=>{c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%');c.style.transform=`rotateY(${(x-.5)*10}deg) rotateX(${(.5-y)*10}deg) translateZ(10px)`});c.addEventListener('mouseleave',()=>c.style.transform='')});
+// Lightbox
+$$('.g').forEach(g=>g.addEventListener('click',()=>{const o=g.querySelector('.obj').cloneNode();$('#lbBig').innerHTML='';$('#lbBig').style.setProperty('--c',g.style.getPropertyValue('--c'));$('#lbBig').appendChild(o);$('#lbT').textContent=g.dataset.t;$('#lbD').textContent=g.dataset.d;$('#lb').classList.add('on')}));
+$('#lb').onclick=()=>$('#lb').classList.remove('on');
+document.addEventListener('keydown',e=>e.key==='Escape'&&$('#lb').classList.remove('on'));
+
+// ---- THREE.js ----
+function figurine(mat){const g=new THREE.Group();
+ const add=(geo,y,m)=>{const o=new THREE.Mesh(geo,m||mat);o.position.y=y;g.add(o);return o};
+ add(new THREE.CylinderGeometry(1.1,1.3,.25,40),-1.6);
+ add(new THREE.CylinderGeometry(.55,.9,1.7,32),-.65);
+ add(new THREE.SphereGeometry(.62,32,32),.55);
+ add(new THREE.ConeGeometry(.7,1.1,32),1.5);
+ const ring=new THREE.Mesh(new THREE.TorusGeometry(.75,.06,16,60),mat);ring.position.y=-.1;ring.rotation.x=Math.PI/2;g.add(ring);
+ return g}
+function setup(canvas){const r=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});r.setPixelRatio(Math.min(devicePixelRatio,2));
+ const s=new THREE.Scene(),c=new THREE.PerspectiveCamera(40,1,.1,100);c.position.set(0,0,9);
+ s.add(new THREE.AmbientLight(0xffffff,.35));
+ const l1=new THREE.PointLight(0x2143EC,3,30);l1.position.set(-5,3,5);s.add(l1);
+ const l2=new THREE.PointLight(0xA1E0F1,2.4,30);l2.position.set(5,-2,4);s.add(l2);
+ const l3=new THREE.DirectionalLight(0xD8CFC1,.8);l3.position.set(0,5,5);s.add(l3);
+ const fit=()=>{const w=canvas.clientWidth,h=canvas.clientHeight;r.setSize(w,h,false);c.aspect=w/h;c.updateProjectionMatrix()};
+ fit();addEventListener('resize',fit);return{r,s,c}}
+
+// Hero
+(()=>{const {r,s,c}=setup($('#heroCanvas'));
+ const mat=new THREE.MeshStandardMaterial({color:0x2143EC,metalness:.6,roughness:.2});
+ const f=figurine(mat);f.scale.setScalar(1.25);s.add(f);
+ const wire=new THREE.Mesh(new THREE.IcosahedronGeometry(3.4,1),new THREE.MeshBasicMaterial({color:0xA1E0F1,wireframe:true,transparent:true,opacity:.18}));s.add(wire);
+ const knot=new THREE.Mesh(new THREE.TorusKnotGeometry(.5,.16,120,16),new THREE.MeshStandardMaterial({color:0xACCCB3,metalness:.5,roughness:.25}));knot.position.set(-4.2,1.6,-1);s.add(knot);
+ const oct=new THREE.Mesh(new THREE.OctahedronGeometry(.6),new THREE.MeshStandardMaterial({color:0xD8CFC1,metalness:.3,roughness:.3}));oct.position.set(4.3,-1.4,0);s.add(oct);
+ const tor=new THREE.Mesh(new THREE.TorusGeometry(.6,.2,16,40),new THREE.MeshStandardMaterial({color:0xA1E0F1,metalness:.4,roughness:.2}));tor.position.set(3.6,2.2,-2);s.add(tor);
+ const pg=new THREE.BufferGeometry(),pts=[];for(let i=0;i<500;i++)pts.push((Math.random()-.5)*24,(Math.random()-.5)*14,(Math.random()-.5)*10);
+ pg.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));
+ const P=new THREE.Points(pg,new THREE.PointsMaterial({color:0xA1E0F1,size:.03}));s.add(P);
+ let mx=0,my=0,sy=0;addEventListener('mousemove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+ addEventListener('scroll',()=>sy=scrollY/innerHeight);
+ (function loop(t){t*=.001;f.rotation.y=t*.7+mx*1.2;f.rotation.x=my*.3;f.position.y=Math.sin(t*1.2)*.25-sy*1.5;
+  wire.rotation.y=-t*.1;wire.rotation.x=t*.06;knot.rotation.x=t*.6;knot.rotation.y=t*.4;knot.position.y=1.6+Math.sin(t)*.3;
+  oct.rotation.y=t*.8;oct.rotation.x=t*.5;oct.position.y=-1.4+Math.cos(t*1.1)*.3;tor.rotation.x=t*.7;tor.position.y=2.2+Math.sin(t*.9)*.3;
+  P.rotation.y=t*.02;c.position.x=mx*1.2;c.position.y=-my*.8;c.lookAt(0,0,0);
+  if(sy<1.3)r.render(s,c);requestAnimationFrame(loop)})(0)})();
+
+// Configurateur
+(()=>{const cv=$('#confCanvas'),{r,s,c}=setup(cv);
+ const mat=new THREE.MeshStandardMaterial({color:0x2143EC,metalness:.85,roughness:.05});
+ const f=figurine(mat);s.add(f);
+ const floor=new THREE.Mesh(new THREE.CircleGeometry(3,64),new THREE.MeshBasicMaterial({color:0x2143EC,transparent:true,opacity:.12}));floor.rotation.x=-Math.PI/2;floor.position.y=-1.75;s.add(floor);
+ let drag=false,lx=0,rot=0,vel=.008;
+ cv.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;cv.style.cursor='grabbing'});
+ addEventListener('pointerup',()=>{drag=false;cv.style.cursor='grab'});
+ addEventListener('pointermove',e=>{if(drag){rot+=(e.clientX-lx)*.01;lx=e.clientX}});
+ let target=1,color='Bleu électrique',fin='Mate';
+ const upd=()=>{const cm=+$('#size').value;$('#sz').textContent=cm+' cm';target=.55+cm/30*.75;
+  const p=Math.round(12+cm*cm*.12*(fin==='Métal'?1.6:fin==='Brillante'?1.2:1));$('#sum').innerHTML=`<b>${color}</b>, ${fin.toLowerCase()}, ${cm} cm.<br>Estimation indicative : à partir de ${p} €`};
+ $$('#sw button').forEach(b=>b.onclick=()=>{$$('#sw button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mat.color.set(b.dataset.c);floor.material.color.set(b.dataset.c);color=b.getAttribute('aria-label')});
+ $$('#fin button').forEach(b=>b.onclick=()=>{$$('#fin button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mat.metalness=+b.dataset.m;mat.roughness=+b.dataset.r;fin=b.textContent;upd()});
+ $('#size').oninput=upd;upd();
+ let sc=1;(function loop(t){if(!drag)rot+=vel;f.rotation.y=rot;sc+=(target-sc)*.08;f.scale.setScalar(sc);f.position.y=Math.sin(t*.0015)*.15;r.render(s,c);requestAnimationFrame(loop)})(0)})();
+</script>
+<script>
+const P=[['Guerrier arcane',24,'#2143EC','o1','Miniature résine 32 mm, prête à peindre.','Populaire'],['Vase Orbite',39,'#ACCCB3','o2','Vase décoratif en PLA soie, 18 cm.',''],['Cristal',29,'#A1E0F1','o3','Cristal facetté à effet lumineux.','Nouveau'],['Bague Anneau',19,'#D8CFC1','o4','Anneau personnalisable, taille au choix.',''],['Golem de poche',34,'#2143EC','o5','Figurine peinte à la main.',''],['Boule Nébuleuse',59,'#7E8589','o1','Lampe LED personnalisée.','Populaire'],['Prisme',22,'#A1E0F1','o3','Prototype fonctionnel, finition polie.',''],['Figurine à ton image',89,'#ACCCB3','o1','Modélisée depuis ta photo, peinte main.','Sur mesure'],['Porte-clés prénom 3D',12,'#2143EC','o2','Ton prénom en relief, 6 couleurs.','Nouveau']];
+const cart={},eur=v=>v.toFixed(2).replace('.',',')+' €';
+const tot=()=>{const s=Object.entries(cart).reduce((a,[i,q])=>a+P[i][1]*q,0),sh=s&&s<60?4.9:0;return{s,sh,t:s+sh}};
+$('#shop').innerHTML=P.map((x,i)=>`<div class="pc rv" style="--c:${x[2]}">${x[5]?`<span class="bd">${x[5]}</span>`:''}<div class="pv"><div class="obj ${x[3]}"></div></div><h3>${x[0]}</h3><p>${x[4]}</p><div class="row"><span class="pr">${eur(x[1])}</span><button class="btn p add" data-i="${i}">Ajouter</button></div></div>`).join('');
+$$('.pc').forEach(c=>{io.observe(c);c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;c.style.transform=`rotateY(${(x-.5)*8}deg) rotateX(${(.5-y)*8}deg)`});c.addEventListener('mouseleave',()=>c.style.transform='')});
+const mq=$('#mq');mq.innerHTML+=mq.innerHTML+mq.innerHTML+mq.innerHTML;
+const openCart=()=>$('#dr').classList.add('on');
+function render(){const ks=Object.keys(cart);$('#cc').textContent=ks.reduce((a,k)=>a+cart[k],0);
+ $('#ci').innerHTML=ks.length?ks.map(k=>`<div class="ci"><div><b>${P[k][0]}</b><br><small>${eur(P[k][1])}</small></div><div class="qt"><button data-a="-" data-i="${k}">−</button> ${cart[k]} <button data-a="+" data-i="${k}">+</button></div></div>`).join(''):'<p style="color:var(--grey)">Ton panier est vide. Ajoute une pièce pour commencer.</p>';
+ const T=tot();$('#ct').innerHTML=`Sous-total : ${eur(T.s)}<br>Livraison : ${T.sh?eur(T.sh):'offerte'}<br><b>Total : ${eur(T.t)}</b>`;$('#pay').disabled=!ks.length}
+render();
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const i=b.dataset.i;
+ if(b.classList.contains('add')){cart[i]=(cart[i]||0)+1;render();openCart()}
+ if(b.dataset.a){cart[i]+=b.dataset.a==='+'?1:-1;if(cart[i]<1)delete cart[i];render()}});
+$('#cartBtn').onclick=openCart;$('#closeCart').onclick=()=>$('#dr').classList.remove('on');
+$$('.g').forEach(g=>g.addEventListener('click',()=>{const i=P.findIndex(x=>x[0]===g.dataset.t);$('#lbP').textContent=eur(P[i][1]);$('#lbAdd').dataset.i=i}));
+$('#lbAdd').onclick=e=>{const i=e.target.dataset.i;cart[i]=(cart[i]||0)+1;render();openCart()};
+const M=['Carte bancaire','PayPal','Apple Pay'];let mode=0;
+function goTxt(){$('#go').textContent='Payer '+eur(tot().t)+' · '+M[mode];$('#cs').textContent='Total de la commande : '+eur(tot().t)}
+$('#pay').onclick=()=>{$('#dr').classList.remove('on');$('#co').classList.add('on');goTxt()};
+$('#closeCo').onclick=()=>$('#co').classList.remove('on');
+$$('#pm button').forEach((b,k)=>b.onclick=()=>{$$('#pm button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=k;$('#cardf').style.display=k?'none':'block';goTxt()});
+// Pour un vrai paiement : remplace ce bloc par un lien Stripe Payment Link ou PayPal.
+$('#cf').onsubmit=e=>{e.preventDefault();const n='T3D-'+Math.floor(10000+Math.random()*90000);$('#cf').innerHTML=`<h3 style="font-size:26px">Merci ! Commande ${n} confirmée.</h3><p style="margin:14px 0 22px">Un email de confirmation t’est envoyé. Fabrication sous 3 à 5 jours.</p><button type="button" class="btn p" id="ok">Fermer</button>`;for(const k in cart)delete cart[k];render();$('#ok').onclick=()=>location.reload()};
+$('#mf').onsubmit=e=>{e.preventDefault();location.href='mailto:contact@touch3d.fr?subject='+encodeURIComponent($('#ms').value+' — '+$('#mn').value)+'&body='+encodeURIComponent($('#mm').value+'\n\n'+$('#me').value)};
+$('#burger').onclick=()=>$('#links').classList.toggle('open');$$('#links a').forEach(a=>a.onclick=()=>$('#links').classList.remove('open'));
+const gl=$('#glow'),bar=$('#bar');addEventListener('mousemove',e=>{gl.style.left=e.clientX+'px';gl.style.top=e.clientY+'px'});
+addEventListener('scroll',()=>bar.style.width=scrollY/(document.body.scrollHeight-innerHeight)*100+'%');
+</script>
+</body>
+</html>
